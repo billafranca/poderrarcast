@@ -1,8 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
 
 import { listPlans } from "@/lib/plans.functions";
+import { createCheckoutSession } from "@/lib/checkout.functions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/use-auth";
@@ -22,8 +24,26 @@ const fmtPrice = (cents: number) =>
 
 function Index() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const fetchPlans = useServerFn(listPlans);
+  const startCheckout = useServerFn(createCheckoutSession);
   const { data } = useQuery({ queryKey: ["plans"], queryFn: () => fetchPlans() });
+
+  const checkout = useMutation({
+    mutationFn: (planId: string) => startCheckout({ data: { planId } }),
+    onSuccess: ({ url }) => {
+      if (url) window.location.href = url;
+    },
+    onError: (err: Error) => toast.error(err.message ?? "Falha ao iniciar checkout"),
+  });
+
+  const handleSubscribe = (planId: string) => {
+    if (!user) {
+      navigate({ to: "/signup" });
+      return;
+    }
+    checkout.mutate(planId);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -67,10 +87,13 @@ function Index() {
                   <ul className="text-sm space-y-1 flex-1">
                     {(plan.features as string[]).map((f) => <li key={f}>• {f}</li>)}
                   </ul>
-                  <Button asChild>
-                    <Link to={user ? "/dashboard" : "/signup"}>
-                      Assinar {plan.name}
-                    </Link>
+                  <Button
+                    onClick={() => handleSubscribe(plan.id)}
+                    disabled={checkout.isPending}
+                  >
+                    {checkout.isPending && checkout.variables === plan.id
+                      ? "Redirecionando…"
+                      : `Assinar ${plan.name}`}
                   </Button>
                 </CardContent>
               </Card>
