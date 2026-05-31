@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX IF NOT EXISTS payment_events_stripe_event_id_key ON public.payment_events (stripe_event_id);
