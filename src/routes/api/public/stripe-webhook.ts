@@ -35,7 +35,7 @@ export const Route = createFileRoute("/api/public/stripe-webhook")({
           .insert({
             stripe_event_id: event.id,
             event_type: event.type,
-            payload: event as unknown as Record<string, unknown>,
+            payload: JSON.parse(JSON.stringify(event)),
           });
 
         if (logErr) {
