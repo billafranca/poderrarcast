@@ -24,8 +24,26 @@ const fmtPrice = (cents: number) =>
 
 function Index() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const fetchPlans = useServerFn(listPlans);
+  const startCheckout = useServerFn(createCheckoutSession);
   const { data } = useQuery({ queryKey: ["plans"], queryFn: () => fetchPlans() });
+
+  const checkout = useMutation({
+    mutationFn: (planId: string) => startCheckout({ data: { planId } }),
+    onSuccess: ({ url }) => {
+      if (url) window.location.href = url;
+    },
+    onError: (err: Error) => toast.error(err.message ?? "Falha ao iniciar checkout"),
+  });
+
+  const handleSubscribe = (planId: string) => {
+    if (!user) {
+      navigate({ to: "/signup" });
+      return;
+    }
+    checkout.mutate(planId);
+  };
 
   return (
     <div className="min-h-screen bg-background">
