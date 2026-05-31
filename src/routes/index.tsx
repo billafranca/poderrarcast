@@ -87,10 +87,13 @@ function Index() {
                   <ul className="text-sm space-y-1 flex-1">
                     {(plan.features as string[]).map((f) => <li key={f}>• {f}</li>)}
                   </ul>
-                  <Button asChild>
-                    <Link to={user ? "/dashboard" : "/signup"}>
-                      Assinar {plan.name}
-                    </Link>
+                  <Button
+                    onClick={() => handleSubscribe(plan.id)}
+                    disabled={checkout.isPending}
+                  >
+                    {checkout.isPending && checkout.variables === plan.id
+                      ? "Redirecionando…"
+                      : `Assinar ${plan.name}`}
                   </Button>
                 </CardContent>
               </Card>
