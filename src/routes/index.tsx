@@ -1,106 +1,292 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { toast } from "sonner";
+import { Brain, Headphones, PlayCircle, Sparkles, Target, Zap, Shield, Clock, Users } from "lucide-react";
 
 import { listPlans } from "@/lib/plans.functions";
-import { createCheckoutSession } from "@/lib/checkout.functions";
+import { FEATURED_EPISODES, INSTRUCTORS, TESTIMONIALS } from "@/data/modules";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAuth } from "@/hooks/use-auth";
+import { Card, CardContent } from "@/components/ui/card";
+import { LeadCaptureForm } from "@/components/site/LeadCaptureForm";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "podErrar — Aprenda com erros reais" },
-      { name: "description", content: "Curso em formato de streaming que transforma falhas em decisões melhores usando IA." },
+      { title: "PodErrar — Aprenda com erros reais. Evolua com inteligência." },
+      {
+        name: "description",
+        content:
+          "Curso em formato de podcast e vídeo que transforma falhas em decisões melhores usando IA. Comece agora.",
+      },
+      { property: "og:title", content: "PodErrar — Aprenda com erros reais" },
+      {
+        property: "og:description",
+        content: "Streaming de podcasts e vídeos sobre erros reais no empreendedorismo, com diagnóstico por IA.",
+      },
     ],
   }),
-  component: Index,
+  component: HomePage,
 });
+
+const HIGHLIGHTS = [
+  { icon: Brain, title: "Não ensina fórmula de sucesso", desc: "Mostra o que ninguém quer mostrar: o erro." },
+  { icon: Target, title: "Erros reais de empreendedores", desc: "Casos verdadeiros, com nomes e números." },
+  { icon: Sparkles, title: "IA para corrigir decisões", desc: "Aprenda a usar IA como consultor estratégico." },
+  { icon: Headphones, title: "Assista ou ouça quando quiser", desc: "Formato leve, dentro da sua rotina." },
+];
+
+const STEPS = [
+  { n: "01", title: "Assista ou ouça os episódios", desc: "No seu ritmo, no formato que preferir." },
+  { n: "02", title: "Analise erros reais", desc: "Casos detalhados de empreendedores como você." },
+  { n: "03", title: "Use IA para entender o problema", desc: "Nossa IA Diagnóstico pode te ajudar agora mesmo." },
+  { n: "04", title: "Aplique no seu negócio", desc: "Checklist, plano de ação e prompts prontos." },
+];
 
 const fmtPrice = (cents: number) =>
   (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0 });
 
-function Index() {
-  const { user } = useAuth();
-  const navigate = useNavigate();
+function HomePage() {
   const fetchPlans = useServerFn(listPlans);
-  const startCheckout = useServerFn(createCheckoutSession);
   const { data } = useQuery({ queryKey: ["plans"], queryFn: () => fetchPlans() });
 
-  const checkout = useMutation({
-    mutationFn: (planId: string) => startCheckout({ data: { planId } }),
-    onSuccess: ({ url }) => {
-      if (url) window.location.href = url;
-    },
-    onError: (err: Error) => toast.error(err.message ?? "Falha ao iniciar checkout"),
-  });
-
-  const handleSubscribe = (planId: string) => {
-    if (!user) {
-      navigate({ to: "/signup" });
-      return;
-    }
-    checkout.mutate(planId);
-  };
-
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/" className="font-bold text-xl">podErrar</Link>
-          <div className="flex gap-2">
-            {user ? (
-              <Button asChild size="sm"><Link to="/dashboard">Meu painel</Link></Button>
-            ) : (
-              <>
-                <Button asChild variant="ghost" size="sm"><Link to="/login">Entrar</Link></Button>
-                <Button asChild size="sm"><Link to="/signup">Criar conta</Link></Button>
-              </>
-            )}
+    <div className="flex flex-col">
+      {/* HERO */}
+      <section className="relative overflow-hidden bg-hero-radial">
+        <div className="container mx-auto px-4 py-20 md:py-32 text-center max-w-4xl">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs text-primary mb-6">
+            <Zap className="h-3 w-3" /> Edutainment + IA
           </div>
-        </div>
-      </header>
-
-      <main>
-        <section className="container mx-auto px-4 py-16 text-center max-w-2xl space-y-4">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-            Aprenda com erros reais, evolua com inteligência
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight">
+            Aprenda com <span className="text-gradient-primary">erros reais.</span>
+            <br />
+            Evolua com inteligência.
           </h1>
-          <p className="text-muted-foreground text-lg">
-            Curso em formato podcast + vídeo que transforma falhas em decisões melhores usando IA.
+          <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+            Um curso em formato de streaming que transforma falhas em decisões melhores usando IA.
+            Inspirado em Netflix e Spotify.
           </p>
-        </section>
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Button asChild size="lg" className="shadow-glow text-base px-8">
+              <Link to="/checkout">Começar agora</Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="text-base px-8">
+              <a href="#episodios">
+                <PlayCircle className="mr-2 h-5 w-5" /> Assistir trailer
+              </a>
+            </Button>
+          </div>
+          <p className="mt-6 text-xs text-muted-foreground">
+            Mais de 500 empreendedores já testaram • Garantia de 7 dias
+          </p>
+        </div>
+      </section>
 
-        <section className="container mx-auto px-4 pb-16">
-          <h2 className="text-2xl font-bold text-center mb-8">Escolha seu plano</h2>
-          <div className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto">
-            {data?.plans.map((plan) => (
-              <Card key={plan.id} className="flex flex-col">
-                <CardHeader>
-                  <CardTitle>{plan.name}</CardTitle>
-                  <p className="text-sm text-muted-foreground">{plan.description}</p>
-                </CardHeader>
-                <CardContent className="flex-1 flex flex-col gap-4">
-                  <p className="text-3xl font-bold">{fmtPrice(plan.price_cents)}</p>
-                  <ul className="text-sm space-y-1 flex-1">
-                    {(plan.features as string[]).map((f) => <li key={f}>• {f}</li>)}
-                  </ul>
-                  <Button
-                    onClick={() => handleSubscribe(plan.id)}
-                    disabled={checkout.isPending}
-                  >
-                    {checkout.isPending && checkout.variables === plan.id
-                      ? "Redirecionando…"
-                      : `Assinar ${plan.name}`}
-                  </Button>
+      {/* HIGHLIGHTS */}
+      <section className="container mx-auto px-4 py-20">
+        <div className="max-w-2xl mx-auto text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold">Por que este curso é diferente?</h2>
+          <p className="mt-3 text-muted-foreground">
+            Enquanto outros ensinam a acertar, este ensina a evoluir com os erros usando IA.
+          </p>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {HIGHLIGHTS.map((h) => (
+            <Card key={h.title} className="bg-card border-border/50 hover:border-primary/50 transition-colors">
+              <CardContent className="p-6 space-y-3">
+                <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <h.icon className="h-5 w-5" />
+                </div>
+                <h3 className="font-semibold">{h.title}</h3>
+                <p className="text-sm text-muted-foreground">{h.desc}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* EPISÓDIOS — carrossel Netflix */}
+      <section id="episodios" className="py-20 bg-surface/40">
+        <div className="container mx-auto px-4 mb-8 flex items-end justify-between">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-bold">Episódios em destaque</h2>
+            <p className="mt-2 text-muted-foreground">Casos reais. Lições reais.</p>
+          </div>
+          <Button asChild variant="ghost"><Link to="/curso">Ver curso →</Link></Button>
+        </div>
+        <div className="overflow-x-auto scrollbar-hide">
+          <div className="flex gap-4 px-4 pb-4 container mx-auto">
+            {FEATURED_EPISODES.map((ep, i) => (
+              <Card
+                key={ep.title}
+                className="group min-w-[280px] max-w-[280px] overflow-hidden bg-card hover:border-primary/50 transition-all hover:-translate-y-1 cursor-pointer"
+              >
+                <div className="relative aspect-video bg-gradient-to-br from-secondary to-background flex items-center justify-center">
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+                  <PlayCircle className="h-14 w-14 text-primary/70 group-hover:scale-110 group-hover:text-primary transition" />
+                  <span className="absolute bottom-2 right-2 rounded bg-background/80 px-2 py-0.5 text-[10px] font-mono">
+                    EP {String(i + 1).padStart(2, "0")}
+                  </span>
+                </div>
+                <CardContent className="p-4 space-y-2">
+                  <p className="text-xs text-primary font-mono">{ep.module} • {ep.duration}</p>
+                  <h3 className="font-semibold leading-tight">{ep.title}</h3>
                 </CardContent>
               </Card>
             ))}
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
+
+      {/* COMO FUNCIONA */}
+      <section className="container mx-auto px-4 py-20">
+        <div className="max-w-2xl mx-auto text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold">Como funciona a experiência</h2>
+        </div>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {STEPS.map((s) => (
+            <div key={s.n} className="relative p-6 rounded-xl bg-card border border-border/50">
+              <div className="text-5xl font-display font-bold text-gradient-primary opacity-80">{s.n}</div>
+              <h3 className="mt-3 font-semibold">{s.title}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* INSTRUTORES */}
+      <section className="py-20 bg-surface/40">
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold">Quem está por trás</h2>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 max-w-5xl mx-auto">
+            {INSTRUCTORS.map((i) => (
+              <Card key={i.name} className="bg-card text-center hover:border-primary/50 transition-colors">
+                <CardContent className="p-6 space-y-3">
+                  <div className="mx-auto h-20 w-20 rounded-full bg-gradient-primary flex items-center justify-center text-primary-foreground font-bold text-xl">
+                    {i.initials}
+                  </div>
+                  <h3 className="font-semibold">{i.name}</h3>
+                  <p className="text-sm text-muted-foreground">{i.bio}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PLANOS */}
+      <section className="container mx-auto px-4 py-20">
+        <div className="max-w-2xl mx-auto text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold">Escolha seu plano</h2>
+          <p className="mt-3 text-muted-foreground">Comece pelo que faz sentido pra você agora.</p>
+        </div>
+        <div className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto">
+          {data?.plans.map((plan, idx) => {
+            const featured = idx === 1;
+            return (
+              <Card
+                key={plan.id}
+                className={
+                  featured
+                    ? "relative bg-card border-primary/60 shadow-glow scale-105"
+                    : "bg-card hover:border-primary/40 transition-colors"
+                }
+              >
+                {featured && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
+                    Mais escolhido
+                  </div>
+                )}
+                <CardContent className="p-6 space-y-4">
+                  <div>
+                    <h3 className="text-xl font-bold">{plan.name}</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">{plan.description}</p>
+                  </div>
+                  <p className="text-4xl font-display font-bold">{fmtPrice(plan.price_cents)}</p>
+                  <ul className="space-y-2 text-sm">
+                    {(plan.features as string[]).map((f) => (
+                      <li key={f} className="flex gap-2">
+                        <span className="text-primary">✓</span>
+                        <span>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Button asChild className="w-full" variant={featured ? "default" : "outline"}>
+                    <Link to="/checkout" search={{ plan: plan.id }}>
+                      Assinar {plan.name}
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* DEPOIMENTOS */}
+      <section className="py-20 bg-surface/40">
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold">O que os alunos dizem</h2>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3 max-w-5xl mx-auto">
+            {TESTIMONIALS.map((t) => (
+              <Card key={t.author} className="bg-card">
+                <CardContent className="p-6 space-y-3">
+                  <p className="text-lg italic">"{t.text}"</p>
+                  <p className="text-sm text-muted-foreground">— {t.author}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* LEAD CAPTURE */}
+      <section className="container mx-auto px-4 py-20">
+        <Card className="max-w-2xl mx-auto bg-card border-primary/30">
+          <CardContent className="p-8 space-y-4">
+            <div className="text-center space-y-2">
+              <h2 className="text-2xl md:text-3xl font-bold">Receba um episódio gratuito</h2>
+              <p className="text-muted-foreground">Sem compromisso. Direto no seu email.</p>
+            </div>
+            <LeadCaptureForm />
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* TRUST */}
+      <section className="container mx-auto px-4 pb-12">
+        <div className="grid gap-4 sm:grid-cols-3 max-w-3xl mx-auto text-sm">
+          {[
+            { icon: Shield, t: "Ambiente seguro", d: "Pagamento processado pela Stripe" },
+            { icon: Clock, t: "Garantia de 7 dias", d: "100% do seu dinheiro de volta" },
+            { icon: Users, t: "+500 alunos", d: "Empreendedores reais aprendendo" },
+          ].map((i) => (
+            <div key={i.t} className="flex items-center gap-3 p-4 rounded-lg bg-card border border-border/50">
+              <i.icon className="h-5 w-5 text-primary" />
+              <div>
+                <p className="font-semibold">{i.t}</p>
+                <p className="text-xs text-muted-foreground">{i.d}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA FINAL */}
+      <section className="container mx-auto px-4 py-20">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/20 via-card to-card border border-primary/30 p-12 md:p-20 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold max-w-3xl mx-auto">
+            Você não precisa parar de errar. <span className="text-gradient-primary">Precisa aprender melhor.</span>
+          </h2>
+          <Button asChild size="lg" className="mt-8 shadow-glow text-base px-10">
+            <Link to="/checkout">Começar agora</Link>
+          </Button>
+        </div>
+      </section>
     </div>
   );
 }

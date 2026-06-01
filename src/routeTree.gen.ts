@@ -11,8 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as PlanosRouteImport } from './routes/planos'
+import { Route as ObrigadoRouteImport } from './routes/obrigado'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as CursoRouteImport } from './routes/curso'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as AcessoGratuitoRouteImport } from './routes/acesso-gratuito'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OauthCallbackRouteImport } from './routes/oauth.callback'
@@ -29,6 +34,16 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlanosRoute = PlanosRouteImport.update({
+  id: '/planos',
+  path: '/planos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ObrigadoRoute = ObrigadoRouteImport.update({
+  id: '/obrigado',
+  path: '/obrigado',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -37,6 +52,21 @@ const LoginRoute = LoginRouteImport.update({
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CursoRoute = CursoRouteImport.update({
+  id: '/curso',
+  path: '/curso',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AcessoGratuitoRoute = AcessoGratuitoRouteImport.update({
+  id: '/acesso-gratuito',
+  path: '/acesso-gratuito',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
@@ -66,8 +96,13 @@ const ApiPublicStripeWebhookRoute = ApiPublicStripeWebhookRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/acesso-gratuito': typeof AcessoGratuitoRoute
+  '/checkout': typeof CheckoutRoute
+  '/curso': typeof CursoRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/obrigado': typeof ObrigadoRoute
+  '/planos': typeof PlanosRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -76,8 +111,13 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/acesso-gratuito': typeof AcessoGratuitoRoute
+  '/checkout': typeof CheckoutRoute
+  '/curso': typeof CursoRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/obrigado': typeof ObrigadoRoute
+  '/planos': typeof PlanosRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -88,8 +128,13 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/acesso-gratuito': typeof AcessoGratuitoRoute
+  '/checkout': typeof CheckoutRoute
+  '/curso': typeof CursoRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/obrigado': typeof ObrigadoRoute
+  '/planos': typeof PlanosRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
@@ -100,8 +145,13 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/acesso-gratuito'
+    | '/checkout'
+    | '/curso'
     | '/forgot-password'
     | '/login'
+    | '/obrigado'
+    | '/planos'
     | '/reset-password'
     | '/signup'
     | '/dashboard'
@@ -110,8 +160,13 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/acesso-gratuito'
+    | '/checkout'
+    | '/curso'
     | '/forgot-password'
     | '/login'
+    | '/obrigado'
+    | '/planos'
     | '/reset-password'
     | '/signup'
     | '/dashboard'
@@ -121,8 +176,13 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/acesso-gratuito'
+    | '/checkout'
+    | '/curso'
     | '/forgot-password'
     | '/login'
+    | '/obrigado'
+    | '/planos'
     | '/reset-password'
     | '/signup'
     | '/_authenticated/dashboard'
@@ -133,8 +193,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  AcessoGratuitoRoute: typeof AcessoGratuitoRoute
+  CheckoutRoute: typeof CheckoutRoute
+  CursoRoute: typeof CursoRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
+  ObrigadoRoute: typeof ObrigadoRoute
+  PlanosRoute: typeof PlanosRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SignupRoute: typeof SignupRoute
   OauthCallbackRoute: typeof OauthCallbackRoute
@@ -157,6 +222,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/planos': {
+      id: '/planos'
+      path: '/planos'
+      fullPath: '/planos'
+      preLoaderRoute: typeof PlanosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/obrigado': {
+      id: '/obrigado'
+      path: '/obrigado'
+      fullPath: '/obrigado'
+      preLoaderRoute: typeof ObrigadoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -169,6 +248,27 @@ declare module '@tanstack/react-router' {
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/curso': {
+      id: '/curso'
+      path: '/curso'
+      fullPath: '/curso'
+      preLoaderRoute: typeof CursoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/acesso-gratuito': {
+      id: '/acesso-gratuito'
+      path: '/acesso-gratuito'
+      fullPath: '/acesso-gratuito'
+      preLoaderRoute: typeof AcessoGratuitoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -224,8 +324,13 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  AcessoGratuitoRoute: AcessoGratuitoRoute,
+  CheckoutRoute: CheckoutRoute,
+  CursoRoute: CursoRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
+  ObrigadoRoute: ObrigadoRoute,
+  PlanosRoute: PlanosRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SignupRoute: SignupRoute,
   OauthCallbackRoute: OauthCallbackRoute,
@@ -234,13 +339,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

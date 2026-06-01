@@ -13,6 +13,9 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "@/hooks/use-auth";
 import { Toaster } from "../components/ui/sonner";
+import { Navbar } from "@/components/site/Navbar";
+import { Footer } from "@/components/site/Footer";
+import { DiagnosisChat } from "@/components/site/DiagnosisChat";
 
 function NotFoundComponent() {
   return (
@@ -121,9 +124,33 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Outlet />
+        <RootLayout />
         <Toaster richColors position="top-right" />
       </AuthProvider>
     </QueryClientProvider>
+  );
+}
+
+function RootLayout() {
+  const { location } = useRouter().state;
+  const path = location.pathname;
+  // Hide site chrome on auth/dashboard pages
+  const bare =
+    path.startsWith("/login") ||
+    path.startsWith("/signup") ||
+    path.startsWith("/forgot-password") ||
+    path.startsWith("/reset-password") ||
+    path.startsWith("/oauth") ||
+    path.startsWith("/dashboard");
+
+  if (bare) return <Outlet />;
+
+  return (
+    <div className="flex min-h-screen flex-col">
+      <Navbar />
+      <main className="flex-1"><Outlet /></main>
+      <Footer />
+      <DiagnosisChat />
+    </div>
   );
 }
