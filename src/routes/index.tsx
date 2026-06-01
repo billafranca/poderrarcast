@@ -218,7 +218,7 @@ function HomePage() {
             {INSTRUCTORS.map((i) => (
               <Card key={i.name} className="bg-card text-center hover:border-primary/50 transition-colors">
                 <CardContent className="p-6 space-y-3">
-                  <div className="mx-auto h-20 w-20 rounded-full bg-gradient-primary-primary flex items-center justify-center text-primary-foreground font-bold text-xl">
+                  <div className="mx-auto h-20 w-20 rounded-full bg-gradient-primary-primary flex items-center justify-center text-gradient-primary font-bold text-xl">
                     {i.initials}
                   </div>
                   <h3 className="font-semibold">{i.name}</h3>
@@ -249,7 +249,7 @@ function HomePage() {
                 }
               >
                 {featured && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-primary-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-primary-primary px-3 py-1 text-xs font-semibold text-gradient-primary">
                     Mais escolhido
                   </div>
                 )}
@@ -283,14 +283,14 @@ function HomePage() {
       <section className="py-20 bg-surface/40">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold">O que os alunos dizem</h2>
+            <h2 className="text-3xl md:text-4xl font-bold">O que os ouvintes <span className="text-gradient-primary">dizem.</span></h2>
           </div>
           <div className="grid gap-4 md:grid-cols-3 max-w-5xl mx-auto">
             {TESTIMONIALS.map((t) => (
               <Card key={t.author} className="bg-card">
                 <CardContent className="p-6 space-y-3">
                   <p className="text-lg italic">"{t.text}"</p>
-                  <p className="text-sm text-muted-foreground">— {t.author}</p>
+                  <p className="text-sm text-gradient-primary">— {t.author}</p>
                 </CardContent>
               </Card>
             ))}
