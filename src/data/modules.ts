@@ -10,7 +10,7 @@ import epMindset from "@/assets/ep-mindset.jpg";
 
 export type ModuleCode = "M1" | "M2" | "M3" | "M4" | "M5" | "M6";
 
-export type ModuleContent = {
+export type Module = {
   code: ModuleCode;
   title: string;
   tagline: string;
@@ -27,7 +27,7 @@ export type ModuleContent = {
   checklist: string[];
 };
 
-export const MODULES_CONTENT: Record<ModuleCode, ModuleContent> = {
+export const MODULES_CONTENT: Record<ModuleCode, Module> = {
   M1: {
     code: "M1",
     title: "Mentalidade do erro",
@@ -225,7 +225,7 @@ export const MODULES_CONTENT: Record<ModuleCode, ModuleContent> = {
   },
 };
 
-export const MODULES_LIST: ModuleContent[] = [
+export const MODULES_LIST: Module[] = [
   MODULES_CONTENT.M1,
   MODULES_CONTENT.M2,
   MODULES_CONTENT.M3,
