@@ -1,6 +1,3 @@
-import { useRef } from "react";
-import { ChevronLeft, ChevronRight, Play, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import epPricing from "@/assets/ep-pricing.jpg";
 import epMarketing from "@/assets/ep-marketing.jpg";
 import epStrategy from "@/assets/ep-strategy.jpg";
