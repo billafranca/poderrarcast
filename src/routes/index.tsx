@@ -54,88 +54,63 @@ function HomePage() {
 
   return (
     <div className="flex flex-col">
-      {/* HERO */}
-      <section id="inicio" className="relative min-h-[100svh] w-full overflow-hidden">
-      <div className="absolute inset-0">
-        <img
-          src={heroImg}
-          alt="Episódio em destaque - PodErrar"
-          width={1920}
-          height={1080}
-          className="h-full w-full object-cover object-center scale-105 animate-fade-in-slow"
-        />
-        <div className="absolute inset-0 bg-gradient-primary-to-r from-background via-background/80 to-background/20" />
-        <div className="absolute inset-0 bg-gradient-primary-to-t from-background via-background/40 to-transparent" />
-      </div>
-
-      <div className="container relative z-10 flex min-h-[100svh] items-center pt-24 pb-32">
-        <div className="max-w-2xl space-y-6 animate-fade-in">
-          <div className="flex items-center gap-3">
-            <img
-              src={logoMark}
-              alt="PodErrar"
-              width={96}
-              height={96}
-              className="h-14 w-14 md:h-16 md:w-16 object-contain drop-shadow-[0_0_24px_hsl(var(--primary)/0.45)]"
-            />
-            <div className="h-10 w-px bg-border" />
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+  {/* HERO */}
+  <section id="inicio" className="relative min-h-[100svh] w-full overflow-hidden">
+    <div className="absolute inset-0">
+      <img src={heroImg} alt="Episódio em destaque - PodErrar" width={1920} height={1080} className="h-full w-full object-cover object-center scale-105 animate-fade-in-slow" />
+      <div className="absolute inset-0 bg-gradient-primary-to-r from-background via-background/80 to-background/20" />
+      <div className="absolute inset-0 bg-gradient-primary-to-t from-background via-background/40 to-transparent" />
+    </div>
+    
+    {/* Ajustado os paddings iniciais (pl-8, md:pl-20, lg:pl-36) para empurrar o conteúdo para a direita */}
+    <div className="container relative z-10 flex min-h-[100svh] items-center pl-8 md:pl-20 lg:pl-36 pt-24 pb-32">
+      <div className="max-w-2xl space-y-6 animate-fade-in">
+        <div className="flex items-center gap-3">
+          <img src={logoMark} alt="PodErrar" width={96} height={96} className="h-14 w-14 md:h-16 md:w-16 object-contain drop-shadow-[0_0_24px_hsl(var(--primary)/0.45)]" />
+          <div className="h-10 w-px bg-border" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
             </span>
             Novo curso · Estreia agora
           </div>
-          </div>
-
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05]">
-            Aprenda com <span className="text-gradient-primary">erros reais</span>.
-            <br />
-            Evolua com <span className="text-gradient-primary">inteligência</span>.
-          </h1>
-
-          <p className="text-lg md:text-xl text-muted-foreground max-w-xl">
-            Um curso em formato de streaming que transforma falhas em decisões melhores
-            usando IA. Assista, ouça e aplique no seu negócio.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <Button
-              asChild
-              size="lg"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold shadow-glow animate-pulse-glow h-12 px-7"
-            >
-              <Link to="/checkout">
-                <Play className="mr-2 h-5 w-5 fill-current" />
-                Começar agora
-              </Link>
-            </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="secondary"
-              className="bg-secondary/80 backdrop-blur hover:bg-secondary border border-border font-semibold h-12 px-7"
-            >
-              <a href="#destaques">
-                <Info className="mr-2 h-5 w-5" />
-                Assistir trailer
-              </a>
-            </Button>
-          </div>
-
-          <div className="flex items-center gap-6 pt-6 text-sm text-muted-foreground">
-            <div><span className="text-foreground font-bold">6</span> módulos</div>
-            <div className="h-4 w-px bg-border" />
-            <div><span className="text-foreground font-bold">18+</span> episódios</div>
-            <div className="h-4 w-px bg-border" />
-            <div>Vídeo + Podcast</div>
-          </div>
+        </div>
+        
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05]">
+          Aprenda com <span className="text-gradient-primary">erros reais</span>. <br />
+          Evolua com <span className="text-gradient-primary">inteligência</span>.
+        </h1>
+        
+        <p className="text-lg md:text-xl text-muted-foreground max-w-xl">
+          Um curso em formato de streaming que transforma falhas em decisões melhores usando IA. Assista, ouça e aplique no seu negócio.
+        </p>
+        
+        <div className="flex flex-wrap items-center gap-3 pt-2">
+          <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold shadow-glow animate-pulse-glow h-12 px-7" >
+            <Link to="/checkout">
+              <Play className="mr-2 h-5 w-5 fill-current" /> Começar agora
+            </Link>
+          </Button>
+          <Button asChild size="lg" variant="secondary" className="bg-secondary/80 backdrop-blur hover:bg-secondary border border-border font-semibold h-12 px-7" >
+            <a href="#destaques">
+              <Info className="mr-2 h-5 w-5" /> Assistir trailer
+            </a>
+          </Button>
+        </div>
+        
+        <div className="flex items-center gap-6 pt-6 text-sm text-muted-foreground">
+          <div><span className="text-foreground font-bold">6</span> módulos</div>
+          <div className="h-4 w-px bg-border" />
+          <div><span className="text-foreground font-bold">18+</span> episódios</div>
+          <div className="h-4 w-px bg-border" />
+          <div>Vídeo + Podcast</div>
         </div>
       </div>
-
-      <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-primary-to-t from-background to-transparent z-[5]" />
-    </section>
-
+    </div>
+    
+    <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-primary-to-t from-background to-transparent z-[5]" />
+  </section>
       {/* HIGHLIGHTS */}
       <section className="container mx-auto px-4 py-20">
         <div className="max-w-2xl mx-auto text-center mb-12">
@@ -195,12 +170,12 @@ function HomePage() {
       {/* COMO FUNCIONA */}
       <section className="container mx-auto px-4 py-20">
         <div className="max-w-2xl mx-auto text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold">Como funciona a experiência</h2>
+          <h2 className="text-3xl md:text-4xl font-bold">Como funciona a <span className="text-gradient-primary">experiência</span></h2>
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {STEPS.map((s) => (
             <div key={s.n} className="relative p-6 rounded-xl bg-card border border-border/50">
-              <div className="text-5xl font-display font-bold text-gradient-primary-primary opacity-80">{s.n}</div>
+              <div className="text-5xl font-display font-bold text-gradient-primary opacity-80">{s.n}</div>
               <h3 className="mt-3 font-semibold">{s.title}</h3>
               <p className="mt-1 text-sm text-muted-foreground">{s.desc}</p>
             </div>
@@ -212,7 +187,7 @@ function HomePage() {
       <section className="py-20 bg-surface/40">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold">Quem está por trás</h2>
+            <h2 className="text-3xl md:text-4xl font-bold">Quem <span className="text-gradient-primary">está</span> por trás</h2>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 max-w-5xl mx-auto">
             {INSTRUCTORS.map((i) => (
@@ -234,7 +209,7 @@ function HomePage() {
       <section className="container mx-auto px-4 py-20">
         <div className="max-w-2xl mx-auto text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold">Escolha seu plano</h2>
-          <p className="mt-3 text-muted-foreground">Comece pelo que faz sentido pra você agora.</p>
+          <p className="mt-3 text-muted-foreground">Evite erros, tome a decisão <span className="text-gradient-primary">certa</span></p>
         </div>
         <div className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto">
           {data?.plans.map((plan, idx) => {
@@ -303,7 +278,7 @@ function HomePage() {
         <Card className="max-w-2xl mx-auto bg-card border-primary/30">
           <CardContent className="p-8 space-y-4">
             <div className="text-center space-y-2">
-              <h2 className="text-2xl md:text-3xl font-bold">Receba um episódio gratuito</h2>
+              <h2 className="text-2xl md:text-3xl font-bold">Receba um episódio <span className="text-gradient-primary">gratuito</span></h2>
               <p className="text-muted-foreground">Sem compromisso. Direto no seu email.</p>
             </div>
             <LeadCaptureForm />
@@ -334,7 +309,7 @@ function HomePage() {
       <section className="container mx-auto px-4 py-20">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-primary-to-br from-primary/20 via-card to-card border border-primary/30 p-12 md:p-20 text-center">
           <h2 className="text-3xl md:text-5xl font-bold max-w-3xl mx-auto">
-            Você não precisa parar de errar. <span className="text-gradient-primary-primary">Precisa aprender melhor.</span>
+            Você não precisa parar de errar. <span className="text-gradient-primary">Precisa aprender melhor.</span>
           </h2>
           <Button asChild size="lg" className="mt-8 shadow-glow text-base px-10">
             <Link to="/checkout">Começar agora</Link>
