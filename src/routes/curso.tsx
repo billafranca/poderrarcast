@@ -30,11 +30,16 @@ function CoursePage() {
   return (
     <div className="container mx-auto px-4 py-12 md:py-20 max-w-5xl">
       <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
-        <p className="text-sm uppercase tracking-widest text-primary">Conteúdo</p>
-        <h1 className="text-4xl md:text-5xl font-bold">6 módulos para aprender com erros</h1>
-        <p className="text-muted-foreground">
-          Cada módulo combina teoria, prática, validação com IA e checklist de aplicação.
-        </p>
+         <p className="text-primary text-sm font-semibold tracking-widest uppercase mb-3">
+            Conteúdo do curso
+          </p>
+        <h2 className="text-3xl md:text-5xl font-black tracking-tight">
+            6 módulos. <span className="text-gradient">Aprendizado completo.</span>
+          </h2>
+        <p className="mt-4 text-muted-foreground md:text-lg">
+            Cada módulo entrega vídeo, leitura, exercícios práticos, quiz com IA e checklist de implementação.
+            Você entende, testa, valida e aplica — de verdade.
+          </p>
       </div>
 
       <div className="space-y-4">

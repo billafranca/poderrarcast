@@ -1,6 +1,7 @@
+
 import { Link } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
@@ -15,9 +16,21 @@ const links = [
 export function Navbar() {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/40 bg-background/80 backdrop-blur-xl">
+     <header
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
+        scrolled ? "bg-background/85 backdrop-blur-xl border-b border-border" : "bg-transparent"
+      }`}
+    >
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center" onClick={() => setOpen(false)}>
           <Logo />
