@@ -183,7 +183,7 @@ function HomePage() {
                   </span>
                 </div>
                 <CardContent className="p-4 space-y-2">
-                  <p className="text-xs text-primary font-mono">{ep.img} • {ep.duration}</p>
+                  <p className="text-xs text-primary font-mono">{ep.module} • {ep.duration}</p>
                   <h3 className="font-semibold leading-tight">{ep.title}</h3>
                 </CardContent>
               </Card>
@@ -344,4 +344,3 @@ function HomePage() {
     </div>
   );
 }
-

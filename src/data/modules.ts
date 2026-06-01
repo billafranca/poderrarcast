@@ -1,18 +1,3 @@
-import { useRef } from "react";
-import { ChevronLeft, ChevronRight, Play, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import epPricing from "@/assets/ep-pricing.jpg";
-import epMarketing from "@/assets/ep-marketing.jpg";
-import epStrategy from "@/assets/ep-strategy.jpg";
-import epHiring from "@/assets/ep-hiring.jpg";
-import epAi from "@/assets/ep-ai-finance.jpg";
-import epMindset from "@/assets/ep-mindset.jpg";
-
-
-
-
-
-
 export type Module = {
   id: string;
   number: number;
@@ -151,12 +136,12 @@ export const MODULES: Module[] = [
 ];
 
 export const FEATURED_EPISODES = [
-  { img: epPricing, title: "Erro de precificação que quebrou um negócio", duration: "32 min", category: "Finanças" },
-  { img: epMarketing, title: "Campanha de marketing que falhou", duration: "28 min", category: "Marketing" },
-  { img: epStrategy, title: "Decisão estratégica sem dados", duration: "41 min", category: "Estratégia" },
-  { img: epHiring, title: "Contratação errada e seus impactos", duration: "36 min", category: "Pessoas" },
-  { img: epAi, title: "IA aplicada às finanças", duration: "45 min", category: "IA" },
-  { img: epMindset, title: "Por que errar é inevitável", duration: "24 min", category: "Mindset" },
+  { title: "Erro de precificação que quebrou um negócio", module: "M3", duration: "32 min" },
+  { title: "Campanha de marketing que falhou", module: "M2", duration: "28 min" },
+  { title: "Decisão estratégica sem dados", module: "M4", duration: "41 min" },
+  { title: "Contratação errada e seus impactos", module: "M5", duration: "35 min" },
+  { title: "Como a IA salvou uma decisão", module: "M6", duration: "26 min" },
+  { title: "Falta de caixa: o erro silencioso", module: "M3", duration: "30 min" },
 ];
 
 export const INSTRUCTORS = [
