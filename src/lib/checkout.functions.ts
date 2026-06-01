@@ -54,8 +54,8 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
         plan_id: plan.id,
         access_months: String(plan.access_months ?? ""),
       },
-      success_url: `${origin}/dashboard?checkout=success`,
-      cancel_url: `${origin}/?checkout=cancel`,
+      success_url: `${origin}/obrigado?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/checkout?canceled=1`,
     });
 
     return { url: session.url };
