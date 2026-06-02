@@ -1,92 +1,92 @@
 
-# Plano de implementação — PodErrar UI completa
+# Plano — Thumbs, vídeos e quiz funcional
 
-Vou montar a UI inteira do PodErrar sobre o backend já existente (auth Supabase, `listPlans`, `createCheckoutSession`, webhook Stripe, `enrollments`). Nada de backend novo é necessário para a parte visual — só algumas extensões pontuais para o chat IA e captura de lead.
+Vou continuar o que ficou pendente sem tocar em `src/routes/index.tsx`. Tudo acontece em `/curso`, `/_authenticated/dashboard` e novo backend de quiz.
 
-## Decisões importantes (preciso confirmar antes de começar)
+## 1. Thumbs de módulos e episódios
 
-1. **Checkout**: você já tem Stripe configurado e funcionando. O JSON pede uma página `/checkout` "fake" estilo Hotmart. Tenho duas opções:
-   - **(A) Manter Stripe real** — botão "Começar agora" leva direto pro Stripe Checkout (como já está). Pula a tela `/checkout` fake.
-   - **(B) Tela `/checkout` própria** — formulário de nome/email/CPF, e ao clicar "Finalizar inscrição" dispara o Stripe Checkout real (preenchendo email/CPF no perfil). Mais parecido com Hotmart.
-   - **(C) Checkout 100% fake** (como o JSON literalmente pede) e ignora o Stripe nesta tela — usado só pra prototipar visual.
+- Gero **6 imagens de módulo** (16:9, tema visual de cada módulo, paleta dark + verde #22C55E) via `imagegen` em `src/assets/modules/m1.jpg … m6.jpg`.
+- Gero **thumbs por episódio** reaproveitando a arte do módulo com variação sutil (sobreposição numerada) — uma imagem por episódio listado em `MODULES`.
+- Atualizo `src/data/modules.ts`:
+  - novo campo `cover` no `Module`
+  - `episodes` vira `{ title: string; thumb: string; videoUrl: string; durationLabel?: string }[]`
+- Em `/curso`:
+  - cada Accordion mostra a **cover do módulo** no header (substituindo o quadrado "M1")
+  - lista de episódios vira **grid de cards estilo Netflix** com thumb 16:9 + título + duração + botão "Assistir"
 
-   👉 Recomendo **B**. Confirma?
+## 2. Links de vídeo por tema
 
-2. **Chat IA "Diagnóstico PodErrar"**: vou usar o **Lovable AI Gateway** (gemini-2.5-flash, sem custo de API key pra você) com streaming. Widget fixo bottom-right em todas as páginas. OK?
+- Para cada episódio, adiciono `videoUrl` (YouTube embed) com vídeo público real alinhado ao tema do módulo (curadoria de palestras/TED/entrevistas em PT-BR sobre mentalidade do erro, marketing, finanças, estratégia, gestão e IA).
+- Clicar em "Assistir" abre um `<Dialog>` com `<iframe>` do YouTube embed responsivo (aspect-video).
+- Marco claramente como "Conteúdo curado externo" para diferenciar dos vídeos próprios futuros.
 
-3. **Conteúdo dos módulos (M1–M6)**: vídeos, livros, quiz, checklist. Duas opções:
-   - **(A) Estático** — hardcoded no front a partir do JSON que você mandou (rápido, fácil de iterar visual).
-   - **(B) No banco** — tabelas `modules`, `module_resources`, `quiz_questions`, etc.
-   
-   👉 Recomendo **A** por enquanto — depois migramos pro banco quando o conteúdo estiver definido. OK?
+## 3. Quiz funcional registrado no banco
 
-4. **Logo**: você quer que eu **gere** uma logo (microfone + onda + gráfico, verde #22C55E sobre #0B0F19) ou você vai enviar uma?
+### Backend (migration)
 
-## Escopo da implementação (assumindo B/A/A acima)
+Duas novas tabelas:
 
-### 1. Design system (`src/styles.css`)
-- Trocar tokens pro tema PodErrar dark: bg `#0B0F19`, primary `#22C55E`, secondary `#1E293B`, text `#E2E8F0`, em oklch.
-- Fontes sans modernas (Inter + display sutil).
-- Gradientes verde→escuro, sombras "glow" no primary, animações suaves.
+```text
+quiz_questions
+  id uuid pk
+  module_id text         -- "m1".."m6"
+  position int
+  question text
+  options jsonb          -- ["Sim, sempre", "Às vezes", "Nunca"]
+  correct_index int
+  explanation text
 
-### 2. Layout compartilhado (`__root.tsx` + novo `components/site/`)
-- `Navbar` sticky com logo à esquerda, links (Início, Curso, Planos), botões Entrar/Criar conta (ou Painel).
-- `Footer` com logo reduzida, links, copyright.
-- Scroll suave global.
+quiz_attempts
+  id uuid pk
+  user_id uuid           -- auth.uid()
+  module_id text
+  score int              -- acertos
+  total int
+  answers jsonb          -- [{question_id, chosen_index, correct}]
+  created_at timestamptz
+```
 
-### 3. Rotas (criar/atualizar)
-- `/` — **Landing** (reescreve `index.tsx`):
-  - Hero com headline, subhead, CTAs (Começar agora→`/checkout`, Assistir trailer→scroll).
-  - Highlights "Por que é diferente".
-  - Carrossel "Episódios em destaque" estilo Netflix (scroll horizontal).
-  - "Como funciona a experiência" (4 passos).
-  - "Quem está por trás" (cards Caio, Pedro, Heitor, Luis).
-  - Preview de planos (3 cards).
-  - Depoimentos.
-  - Captura de lead.
-  - CTA final.
-- `/curso` — **Página do curso**:
-  - Lista os 6 módulos como linhas estilo Netflix.
-  - Cada módulo expansível mostrando: vídeo (placeholder), texto, livros, exercícios, quiz IA, checklist.
-- `/planos` — **Pricing**: 3 cards (Básico/Intermediário/Premium), usa `listPlans` do banco; botão "Assinar" dispara `createCheckoutSession`.
-- `/acesso-gratuito` — **Lead capture**: formulário nome+email, salva em tabela `leads` (nova).
-- `/checkout` — **Checkout estilo Hotmart**: split layout, form (nome/email/CPF) + resumo do produto + selos de garantia/segurança/social proof; submit chama `createCheckoutSession` (atualiza profile com CPF antes) e redireciona pro Stripe. Recebe `?plan=intermediario` via query.
-- `/obrigado` — **Confirmação**: pós-Stripe success; mensagem + próximos passos + CTA "Ir para o curso".
-- `/_authenticated/dashboard` — atualizar visual pro tema novo (já existe).
+GRANTs + RLS:
+- `quiz_questions`: SELECT público (anon+authenticated); admin manage.
+- `quiz_attempts`: usuário só vê/insere os seus (`auth.uid() = user_id`); admin vê tudo.
 
-### 4. Chat IA "Diagnóstico PodErrar"
-- Widget flutuante bottom-right (componente `<DiagnosisChat />` no root).
-- Server function `diagnose.functions.ts` chamando Lovable AI Gateway (`google/gemini-2.5-flash`) com system prompt seguindo o spec: classificar área, diagnóstico, causa, impacto, melhoria, próxima ação, módulo recomendado, trilha, progresso, recomendações.
-- Streaming de respostas, multi-turn.
-- Quick actions com os prompts sugeridos.
-- CTA dinâmico no fim de cada resposta linkando pro módulo recomendado em `/curso#m2`.
+Seed inicial das perguntas a partir do array `quiz` que já existe em `src/data/modules.ts` (3 perguntas/módulo, com `correct_index` e `explanation` definidos de forma coerente com o conteúdo).
 
-### 5. Backend mínimo adicional
-- **Migration**: criar tabela `leads` (id, name, email, created_at) com RLS bloqueando leitura pública, insert público; coluna `cpf` em `profiles` já existe ✅.
-- **Server functions novas**:
-  - `leads.functions.ts` → `submitLead({ name, email })`.
-  - `diagnose.functions.ts` → `diagnose({ messages })` usando `LOVABLE_API_KEY` (já está nos secrets ✅).
-  - Pequeno ajuste em `checkout.functions.ts` para aceitar e gravar `cpf` no perfil antes de criar a sessão.
+### Server functions (`src/lib/quiz.functions.ts`)
 
-### 6. Logo
-- (se eu gerar) `imagegen` premium: microfone estilizado + onda sonora + seta de crescimento, verde #22C55E sobre fundo escuro, flat/minimal.
-- Aplicar na navbar, hero (sutil), footer (opacidade 0.8), favicon.
+- `listQuizQuestions({ moduleId })` — público, retorna perguntas sem `correct_index`.
+- `submitQuizAttempt({ moduleId, answers })` — protegido com `requireSupabaseAuth`; corrige no servidor, grava em `quiz_attempts`, retorna `{ score, total, details }`.
+- `listMyAttempts()` — protegido; retorna histórico do usuário agrupado por módulo (melhor nota + última tentativa).
 
-## Detalhes técnicos
-- Stack: TanStack Start + Tailwind v4 + shadcn (já configurado).
-- Animações: framer-motion (instalar `motion`).
-- Carrossel Netflix: scroll-snap CSS nativo (sem libs extras).
-- Todos os tokens via `src/styles.css` — zero cores hardcoded.
-- Mobile-first, responsivo.
+### UI do quiz (`src/components/site/ModuleQuiz.tsx`)
 
-## O que NÃO vou mexer
-- `src/integrations/supabase/*` (auto-gerados).
-- `src/lib/stripe.server.ts`, `src/routes/api/public/stripe-webhook.ts` (já funcionam).
-- `src/lib/plans.functions.ts`, `auth.functions.ts` (já funcionam).
+- Substitui a seção estática "Quiz com IA" em cada módulo de `/curso`.
+- Estados: carregando perguntas → responder (radio por pergunta) → submeter → tela de resultado com:
+  - score (ex: "2/3 acertos"),
+  - pergunta a pergunta com ✓/✗ e a explicação,
+  - botão "Refazer".
+- Se o usuário **não estiver logado**, mostra CTA "Entrar para responder" linkando para `/login?next=/curso#m2`.
 
----
+### Dashboard — "Meus acertos"
 
-**Responde 3 coisas pra eu começar:**
-1. Checkout: A, B ou C?
-2. Conteúdo dos módulos: estático (A) ou banco (B)?
-3. Logo: eu gero ou você envia?
+Novo Card em `/_authenticated/dashboard` (acima/abaixo de "Minhas matrículas"):
+- Tabela "Meu desempenho nos quizzes":
+  - Módulo · Melhor nota · Última tentativa · Botão "Refazer" (link `/curso#mX`).
+- Vazio: "Você ainda não respondeu nenhum quiz." + link para `/curso`.
+
+## 4. O que NÃO mexe
+
+- `src/routes/index.tsx` (landing — congelada).
+- Backend Stripe / auth / planos / `__root.tsx` / Navbar / DiagnosisChat.
+- Tema, fontes, tokens em `src/styles.css`.
+
+## Arquivos afetados
+
+- **novos**: `src/assets/modules/m{1-6}.jpg`, `src/assets/episodes/*.jpg`, `src/components/site/ModuleQuiz.tsx`, `src/components/site/EpisodeCard.tsx`, `src/lib/quiz.functions.ts`, migration `quiz_questions` + `quiz_attempts` + seed.
+- **editados**: `src/data/modules.ts` (cover + episodes object + videoUrl), `src/routes/curso.tsx` (header com cover, grid de episódios com modal de vídeo, ModuleQuiz no lugar do quiz estático), `src/routes/_authenticated.dashboard.tsx` (card de desempenho).
+
+## Confirmações rápidas
+
+1. **Vídeos**: OK usar YouTube embed curado (gratuito, rápido) até você ter conteúdo próprio? Alternativa é deixar placeholder "em breve".
+2. **Thumbs**: posso gerar via IA (estilo dark + verde, consistente)? Alternativa: você manda.
+3. **Quiz**: 3 perguntas/módulo (como já está no `modules.ts`) com 3 opções cada e 1 correta — OK?
