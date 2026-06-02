@@ -27,6 +27,9 @@ export const Route = createFileRoute("/")({
         content: "Streaming de podcasts e vídeos sobre erros reais no empreendedorismo, com diagnóstico por IA.",
       },
     ],
+    links: [
+      {rel: "icon", type: "image.png", href: "@/assets/logo.png"},
+    ]
   }),
   component: HomePage,
 });
