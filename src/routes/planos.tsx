@@ -14,6 +14,13 @@ export const Route = createFileRoute("/planos")({
       { property: "og:title", content: "Planos — PodErrar" },
       { property: "og:description", content: "Básico, Intermediário ou Premium. Você escolhe." },
     ],
+    links: [
+  {
+    rel: "icon",
+    type: "image/png",
+    href: "/logo.png",
+  },
+]
   }),
   component: PlansPage,
 });

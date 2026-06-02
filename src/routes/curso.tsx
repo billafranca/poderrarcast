@@ -25,6 +25,13 @@ export const Route = createFileRoute("/curso")({
       { property: "og:title", content: "Conteúdo do Curso — PodErrar" },
       { property: "og:description", content: "6 módulos completos com IA aplicada." },
     ],
+    links: [
+  {
+    rel: "icon",
+    type: "image/png",
+    href: "/logo.png",
+  },
+]
   }),
   component: CoursePage,
 });
